@@ -26,7 +26,28 @@ namespace DSTEd.UI
 		public ProjectWizard()
 		{
 			InitializeComponent();
+            TemplateGrid.SelectionChanged += TemplateGrid_SelectionChanged;
 		}
+
+        private void TemplateGrid_SelectionChanged(object s, SelectionChangedEventArgs arg)
+        {
+            var sel = TemplateGrid.SelectedItem;
+            if (sel != null)
+            {
+                var item = sel as Components.ProjectTemplateItem;
+                
+            }
+        }
+
+        private void initgrid()
+        {
+            TemplateGrid.BeginInit();
+            foreach (DirectoryInfo template in TemplateList)
+            {
+                TemplateGrid.Items.Add(new Components.ProjectTemplateItem(template));
+            }
+        }
+            
 		/// <summary>
 		/// Create a new Project from a specified template
 		/// </summary>

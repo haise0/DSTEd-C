@@ -4,7 +4,41 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DSTEd.UI"
+        xmlns:core="clr-namespace:DSTEd.Core"
         mc:Ignorable="d"
-        Title="ProjectWizard" Height="660.5" Width="934.5">
-    <Grid HorizontalAlignment="Left" Height="637" Margin="0,0,-8,-7.5" VerticalAlignment="Top" Width="934.5"/>
+        Title="ProjectWizard" Height="639.5" Width="934.5" Background="#FF2D2D30">
+    <!--TODO: Make it's style fit DSTEd better-->
+    <Grid HorizontalAlignment="Left" Margin="0,0,-8,1.5" Width="934.5">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="17*"/>
+            <RowDefinition Height="479*"/>
+            <RowDefinition Height="21*"/>
+            <RowDefinition Height="46*"/>
+            <RowDefinition Height="45*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="19*"/>
+            <ColumnDefinition Width="619*"/>
+            <ColumnDefinition Width="148*"/>
+            <ColumnDefinition Width="120*"/>
+            <ColumnDefinition Width="28*"/>
+        </Grid.ColumnDefinitions>
+        <Grid Grid.ColumnSpan="3" Grid.Column="1" HorizontalAlignment="Left" Height="45" Grid.Row="3" VerticalAlignment="Top" Width="887.475" Margin="0,0.001,0,0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="34*"/>
+                <RowDefinition Height="11*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="119*"/>
+                <ColumnDefinition Width="9*"/>
+                <ColumnDefinition Width="759*"/>
+            </Grid.ColumnDefinitions>
+            <Label Content="{core:I18N_XAML 'Mod Name'}" Grid.Row="0" Grid.ColumnSpan="1" Grid.RowSpan="2" HorizontalAlignment="Left" Height="35" VerticalAlignment="Top" Width="119.064" FontSize="20" Foreground="White"/>
+            <TextBlock x:Name="ModPath" AllowDrop="True" Grid.Column="2" Grid.Row="0" 
+             HorizontalAlignment="Left" Height="34.022" Margin="0.995,0,0,0" VerticalAlignment="Top" Width="758.411" FontSize="20" Foreground="White" Background="#FF252526" Grid.RowSpan="2"/>
+        </Grid>
+        <Button x:Name="OK_BTN" Content="{core:I18N_XAML 'OK'}" Grid.Column="2" HorizontalAlignment="Left" Height="34.926" Grid.Row="3" VerticalAlignment="Top" Width="120.064" Foreground="White" Background="#FF37373A" FontSize="20" Margin="0,45.001,0,0" Grid.RowSpan="2"/>
+        <Button x:Name="CANCEL_BTN" Content="{core:I18N_XAML 'Cancel'}" Grid.Column="3" HorizontalAlignment="Left" Height="34.926" VerticalAlignment="Top" Width="120.064" Foreground="White" Background="#FF37373A" FontSize="20" Margin="0,45.001,0,0" Grid.Row="3" Grid.RowSpan="2"/>
+        <DataGrid x:Name="TemplateGrid" Grid.ColumnSpan="3" Grid.Column="1" HorizontalAlignment="Left" Height="478.212" Grid.Row="1" VerticalAlignment="Top" Width="887.475"/>
+    </Grid>
 </Window>
