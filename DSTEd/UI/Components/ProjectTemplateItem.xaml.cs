@@ -30,15 +30,18 @@ namespace DSTEd.UI.Components
             }
         }
         private bool IsSelected = false;
+
         public void OnSelectionChanged()
         {
             if(IsSelected)
             {
                 Background = UnSelectedColor;
+				IsSelected = true;
             }
             else
             {
                 Background = SelectedColor;
+				IsSelected = true;
             }
         }
 

@@ -1,17 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.IO;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace DSTEd.UI
 {
@@ -26,28 +17,29 @@ namespace DSTEd.UI
 		public ProjectWizard()
 		{
 			InitializeComponent();
-            TemplateGrid.SelectionChanged += TemplateGrid_SelectionChanged;
+			TemplateGrid.SelectionChanged += TemplateGrid_SelectionChanged;
 		}
 
-        private void TemplateGrid_SelectionChanged(object s, SelectionChangedEventArgs arg)
-        {
-            var sel = TemplateGrid.SelectedItem;
-            if (sel != null)
-            {
-                var item = sel as Components.ProjectTemplateItem;
-                
-            }
-        }
+		private void TemplateGrid_SelectionChanged(object s, SelectionChangedEventArgs arg)
+		{
+			var sel = TemplateGrid.SelectedItem;
+			if (sel != null)
+			{
+				var item = sel as Components.ProjectTemplateItem;
+				item.OnSelectionChanged();
+			}
+		}
 
-        private void initgrid()
-        {
-            TemplateGrid.BeginInit();
-            foreach (DirectoryInfo template in TemplateList)
-            {
-                TemplateGrid.Items.Add(new Components.ProjectTemplateItem(template));
-            }
-        }
-            
+		private void initgrid()
+		{
+			TemplateGrid.BeginInit();
+			foreach (DirectoryInfo template in TemplateList)
+			{
+				TemplateGrid.Items.Add(new Components.ProjectTemplateItem(template));
+			}
+			TemplateGrid.EndInit();
+		}
+
 		/// <summary>
 		/// Create a new Project from a specified template
 		/// </summary>
@@ -111,6 +103,26 @@ namespace DSTEd.UI
 					computer.FileSystem.RenameDirectory(d2.FullName, directory.Name.Replace("__NAME", Replaces));
 			}
 			return ret;
+		}
+
+		public delegate void FileProcessFunction(FileInfo target);
+		public delegate void DirectoryProcessFunction(DirectoryInfo directory);
+		public static void copy_and_process(DirectoryInfo src, string DestnationFullName, FileProcessFunction F1, DirectoryProcessFunction F2)
+		{
+			var srcfileref = src.GetFiles();
+			var srcdirref = src.GetDirectories();
+			var dest = Directory.CreateDirectory(DestnationFullName);
+			foreach (FileInfo file in srcfileref)
+			{
+				var f2 = file.CopyTo(DestnationFullName + '\\' + file.Name);
+				F1?.Invoke(f2);
+			}
+			foreach (DirectoryInfo directory in srcdirref)
+			{
+				string destname = dest.FullName + '\\' + directory.Name;
+				var d2 = new DirectoryInfo(destname);
+				F2?.Invoke(d2);
+			}
 		}
 	}
 }
