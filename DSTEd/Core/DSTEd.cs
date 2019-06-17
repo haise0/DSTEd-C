@@ -15,8 +15,10 @@ namespace DSTEd.Core {
         private Steam.Steam steam = null;
         private Configuration configuration = null;
 		private Core.LUA.LUA lua;
+		public DebugCLICore DBGCLI;
 
         public DSTEd() {
+			DBGCLI = new DebugCLICore();
         }
 
         public void Start() {
@@ -111,7 +113,7 @@ namespace DSTEd.Core {
 			Action[] q2 = { gameloading, modsloading, workshoploading };
 			loaderv2.Start(q1, q2);
 			ide.Show();
-			this.Run();
+		this.Run();
         }
 
         public IDE GetIDE() {
