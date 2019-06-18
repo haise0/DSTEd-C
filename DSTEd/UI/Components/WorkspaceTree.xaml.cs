@@ -182,7 +182,7 @@ namespace DSTEd.UI.Components {
 				/* remove those item which shuold have skipped. 
 				 * for example, there is 2 files named "a.tex" "a.xml"
 				 * because "a.tex" being iterated earlier than "a.xml"
-				 * "a.tex" will be added into Items before it had beed added into skiplist.
+				 * "a.tex" will be added into Items before it had been added into skiplist.
 				 */
 				foreach (WorkspaceFileItem item_to_check in item.Items)
 				{

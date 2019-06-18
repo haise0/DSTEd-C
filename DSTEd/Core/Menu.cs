@@ -7,14 +7,14 @@ using DSTEd.UI;
 using Microsoft.WindowsAPICodePack.Dialogs;
 
 namespace DSTEd.Core {
-    public class Menu {
-        public Menu() {}
+    public static class Menu {
+        static Menu() {}
 
-        public void Init() {
-            this.Update();
+        public static void Init() {
+            Menu.Update();
         }
 
-        public void Update() {
+        public static void Update() {
             Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.DataBind, new Action(delegate () {
                 if (Boot.Core().IsWorkspaceReady()) {
                     Boot.Core().GetIDE().UpdateWelcome(Boot.Core().GetWorkspace().HasWelcome());
@@ -22,7 +22,7 @@ namespace DSTEd.Core {
             }));
         }
 
-        public void Handle(string name, MenuItem menu) {
+        public static void Handle(string name, MenuItem menu) {
             switch (name) {
                 /*case "FILE_NEW_PROJECT":
 					Dialog.Open();
