@@ -11,13 +11,11 @@ using Xceed.Wpf.AvalonDock.Layout;
 
 namespace DSTEd.UI {
     public partial class IDE : Window {
-        private Menu menu = null;
         private AvalonDocument lastactivedocument = null;
 
         public IDE() {
             InitializeComponent();
             
-            this.menu = new Menu();
             this.dockManager.Theme = new Dark();
             this.Closing += this.IDE_Closing;
 		}
@@ -39,7 +37,7 @@ namespace DSTEd.UI {
 				this.workspace_core.Content = new WorkspaceTree(new FileSystem(path + "\\" + "data"), null);
 			})
 			);
-			menu.Init();
+			Menu.Init();
         }
 
         public System.Windows.Controls.MenuItem GetTools() {
@@ -50,20 +48,9 @@ namespace DSTEd.UI {
             return this.debug;
         }
 
-        public Menu GetMenu() {
-            return this.menu;
-        }
-
-        public Boolean IsMenuAvailable() {
-            return this.menu != null;
-        }
-
         private void OnLayoutRootPropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e) {
             var activeContent = ((LayoutRoot) sender).ActiveContent;
-
-            if (this.IsMenuAvailable()) {
-                this.GetMenu().Update();
-            }
+                Menu.Update();
 
             if (e.PropertyName == "ActiveContent") {
                 Logger.Info(string.Format("ActiveContent-> {0}", activeContent));
@@ -119,7 +106,7 @@ namespace DSTEd.UI {
 
         private void OnToolWindow1Hiding(object sender, System.ComponentModel.CancelEventArgs e) {
             Dialog.Open("Are you sure you want to close this tool?", "DSTEd", Dialog.Buttons.YesNo, Dialog.Icon.Warning, delegate (Dialog.Result result) {
-                this.GetMenu().Update();
+                Menu.Update();
 
                 if (result == Dialog.Result.Yes) {
                     return true;
@@ -138,7 +125,7 @@ namespace DSTEd.UI {
             var item = sender as System.Windows.Controls.MenuItem;
 
             if (item != null) {
-                this.menu.Handle(item.Name, item);
+                Menu.Handle(item.Name, item);
             }
         }
 
@@ -223,7 +210,7 @@ namespace DSTEd.UI {
                             if (doc.GetDocument() == document) {
                                 //Boot.Core().GetWorkspace().RemoveDocument( ? doc.GetDocument() : null);
                                 this.editors.Children.Remove(doc);
-                                this.GetMenu().Update();
+                                Menu.Update();
 								//state = Document.State.CREATED;
                                 break;
                             }
@@ -232,7 +219,7 @@ namespace DSTEd.UI {
                     break;
             }
 
-            this.GetMenu().Update();
+            Menu.Update();
         }
 
         private void IDE_Closing(object sender, System.ComponentModel.CancelEventArgs e) {
@@ -242,12 +229,12 @@ namespace DSTEd.UI {
 		private void SaveExecuted(object sender, System.Windows.Input.ExecutedRoutedEventArgs e)
 		{
 			SaveActiveDocument();
-			menu.Update();
+			Menu.Update();
 		}
 		private void SaveAllExecuted(object sender, System.Windows.Input.ExecutedRoutedEventArgs e)
 		{
 			SaveAllDocument();
-			menu.Update();
+			Menu.Update();
 		}
 	}
 }
