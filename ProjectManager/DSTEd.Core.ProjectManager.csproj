@@ -54,4 +54,8 @@
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>:: copy default projects
+xcopy "$(ProjectDir)Project Templates\*" "$(TargetDir)Project Templates\" /E /F /Y</PostBuildEvent>
+  </PropertyGroup>
 </Project>

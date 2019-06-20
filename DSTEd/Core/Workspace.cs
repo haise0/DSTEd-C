@@ -162,7 +162,7 @@ namespace DSTEd.Core {
         public void OnChanged(Document document, Document.State state) {
             Logger.Info("[Workspace] Changed document: " + document.GetName() + " >> " + state);
 
-            Boot.Core().GetIDE().GetMenu().Update();
+            Menu.Update();
             Boot.Core().GetIDE().OnChanged(document, state);
         }
     }
