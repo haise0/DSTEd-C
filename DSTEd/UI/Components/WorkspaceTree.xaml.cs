@@ -184,13 +184,17 @@ namespace DSTEd.UI.Components {
 				 * because "a.tex" being iterated earlier than "a.xml"
 				 * "a.tex" will be added into Items before it had been added into skiplist.
 				 */
-				foreach (WorkspaceFileItem item_to_check in item.Items)
+				Dispatcher.Invoke(() =>
 				{
-					if (skiplist.Contains(item_to_check.FullPath))
+					foreach (TreeViewItem itema in item.Items)
 					{
-						item.Items.Remove(item_to_check);
+						if (itema is WorkspaceFileItem file)
+						{
+							if (skiplist.Contains(file.FullPath))
+								item.Items.Remove(itema);
+						}
 					}
-				}
+				});
 			}
 
 			return item;

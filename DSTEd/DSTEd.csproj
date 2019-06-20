@@ -584,9 +584,7 @@
   <ItemGroup>
     <Resource Include="Assets\Logo.png" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Project Templates\Character\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.6.1">
       <Visible>False</Visible>
