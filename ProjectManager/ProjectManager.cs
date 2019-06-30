@@ -19,7 +19,7 @@ namespace DSTEd.Core.ProjectManager
 
 			foreach (string template_path in Directory.EnumerateDirectories(".\\Project Templates\\"))
 			{
-				string template_config = template_path + "\\Project.json";
+				string template_config = template_path + "\\ProjectTemplate.json";
 				//TODO: read json to deserialize it.
 			}
 

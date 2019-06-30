@@ -156,6 +156,7 @@
     <Compile Include="UI\Components\TextureItem.cs" />
     <Compile Include="UI\Components\WorkshopItem.cs" />
     <Compile Include="UI\Components\WorkspaceFolderItem.cs" />
+    <Compile Include="UI\Components\WorkspaceFSItem.cs" />
     <Compile Include="UI\Components\WorkspaceTree.xaml.cs">
       <DependentUpon>WorkspaceTree.xaml</DependentUpon>
     </Compile>
