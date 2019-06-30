@@ -15,14 +15,14 @@ namespace DSTEd.Core.ProjectManager
 		public string Name { get; private set; }
 		public DirectoryInfo Location { get; private set; }
 
-		public ProjectInfo CreateProject(string Name, string FullPath)
+		virtual public ProjectInfo CreateProject(string Name, string FullPath)
 		{
 			RecursiveDirectoryIterator enumerator = FSUtil.CopyDirectory(Location, FullPath);
-			ProcessFile(Name, ref enumerator);
+			ProcessFiles(Name, ref enumerator);
 			return new ProjectInfo(Name, enumerator.OriginalDirectoryInfo, enumerator);
 		}
 
-		private void ProcessFile(string NewName, ref RecursiveDirectoryIterator iter)
+		private void ProcessFiles(string NewName, ref RecursiveDirectoryIterator iter)
 		{
 			foreach (FileInfo file in iter)
 			{
@@ -35,16 +35,21 @@ namespace DSTEd.Core.ProjectManager
 					}
 					catch (DirectoryNotFoundException e)
 					{
-						System.Diagnostics.Debug.WriteLine("Direcotry not found?\n" +
-							newpath + '\n' +
-							"HRESULT:\n" +
-							e.HResult);
+#if DEBUG
+						System.Diagnostics.Debugger.Break();
+#endif
+						Console.WriteLine("Direcotry not found?\n" +
+						newpath + '\n' +
+						"HRESULT:\n" +
+						e.HResult);
+						Directory.CreateDirectory(Path.GetDirectoryName(newpath));
 						file.MoveTo(newpath);
 					}
 					catch(FileNotFoundException e)
 					{
 						Console.WriteLine(
 							"????????BUG???????\n" +
+							"IS COPY FILE FAILED?\n" +
 							"Check FSUtil.RecursiveDirectoryItertatior\n" +
 							"Stack Traceback:\n{1}\n" +
 							"Message:\n{2}\n" +
@@ -54,6 +59,45 @@ namespace DSTEd.Core.ProjectManager
 					catch(Exception e)
 					{
 						System.Diagnostics.Debug.WriteLine(e.Message + e.StackTrace);
+					}
+
+					//stage2: Change File Content
+					try
+					{
+						byte[] buffier = File.ReadAllBytes(newpath);
+						string content = Encoding.UTF8.GetString(buffier);
+						content.Replace("<NAME>", NewName);
+					}
+					catch(FileNotFoundException e)
+					{
+#if DEBUG
+						System.Diagnostics.Debugger.Break();
+#endif
+						Console.WriteLine("File Not Found?\n" +
+							"newpath={0}\n" +
+							"e:\n{1}\n" +
+							"HRESULT={2}",
+							newpath, e, e.HResult);
+					}
+					catch(DirectoryNotFoundException e)
+					{
+						Console.WriteLine("BUG???????\n" +
+							"newpath={0}\n" +
+							"e:\n{1}\n" +
+							"HRESULT={2}",
+							newpath, e, e.HResult);
+					}
+					catch(System.Security.SecurityException e)
+					{
+						//open a dialog?
+						Console.WriteLine("Check permissions\n" + e.ToString());
+					}
+					catch(Exception e)
+					{
+#if DEBUG
+						System.Diagnostics.Debugger.Break();
+#endif
+						Console.WriteLine(e.Message + e.HResult.ToString() + e.HResult);
 					}
 				}
 			}

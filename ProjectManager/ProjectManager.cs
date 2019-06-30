@@ -17,9 +17,10 @@ namespace DSTEd.Core.ProjectManager
 			Projects = new List<ProjectInfo>();
 			JsonSerializer serializer = new JsonSerializer();
 
-			foreach(string template_path in Directory.EnumerateDirectories(".\\Project Templates\\"))
+			foreach (string template_path in Directory.EnumerateDirectories(".\\Project Templates\\"))
 			{
-
+				string template_config = template_path + "\\Project.json";
+				//TODO: read json to deserialize it.
 			}
 
 			foreach (DirectoryInfo proj_dir in Location.EnumerateDirectories())
