@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // 有关程序集的一般信息由以下
 // 控制。更改这些特性值可修改
 // 与程序集关联的信息。
-[assembly: AssemblyTitle("DSTEd.Core.ProjectManager")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("DSTEd.Core.IO.EnumerableFileSystem")]
+[assembly: AssemblyDescription("FileSystem classlibraries")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("DSTEd")]
-[assembly: AssemblyProduct("DSTEd.Core.ProjectManager")]
+[assembly: AssemblyProduct("DSTEd.Core.IO.EnumerableFileSystem")]
 [assembly: AssemblyCopyright("© 2019 Adrian Preuß")]
 [assembly: AssemblyTrademark("DSTEd")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // 如果此项目向 COM 公开，则下列 GUID 用于类型库的 ID
-[assembly: Guid("e31e0801-b1ec-4e44-b796-418861872159")]
+[assembly: Guid("e2a39f1e-fb70-4b9e-91ce-0d36155156b8")]
 
 // 程序集的版本信息由下列四个值组成: 
 //

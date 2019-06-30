@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 
-namespace DSTEd.Core.IO.filesystem
+namespace DSTEd.Core.IO.EnumerableFileSystem
 {
 	/// <summary>
 	/// Gets all files(also in the subdirectories) in a directory to itertate
@@ -50,16 +50,31 @@ namespace DSTEd.Core.IO.filesystem
 				string filedest = Destnation + '\\' + SimpleRelative(Source.FullName, file.FullName);
 				try
 				{
-					file.CopyTo(filedest);
-				}
-				catch (DirectoryNotFoundException)
-				{
 					Directory.CreateDirectory(Path.GetDirectoryName(filedest));
 					file.CopyTo(filedest);
 				}
+				catch (DirectoryNotFoundException e)
+				{
+					System.Diagnostics.Debug.WriteLine("Direcotry not found?\n" +
+						filedest + '\n' +
+						"HRESULT:\n" +
+						e.HResult);
+					Directory.CreateDirectory(Path.GetDirectoryName(filedest));
+					file.CopyTo(filedest);
+				}
+				catch (FileNotFoundException e)
+				{
+					Console.WriteLine(
+						"????????BUG???????\n" +
+						"Check FSUtil.RecursiveDirectoryItertatior\n" +
+						"Stack Traceback:\n{1}\n" +
+						"Message:\n{2}\n" +
+						"HRESULT:\n{3}\n",
+						e.StackTrace, e.Message, e.HResult);
+				}
 				catch (Exception e)
 				{
-					Console.WriteLine(e);
+					Console.WriteLine(e.ToString() + e.HResult);
 				}
 				#if DEBUG
 				System.Diagnostics.Debug.WriteLine("Copy {0} to {1}", file.FullName, filedest); 

@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DSTEd.Core.IO.EnumerableFileSystem;
 using Newtonsoft.Json;
 
 namespace DSTEd.Core.ProjectManager
@@ -16,12 +17,12 @@ namespace DSTEd.Core.ProjectManager
 
 		public ProjectInfo CreateProject(string Name, string FullPath)
 		{
-			IO.filesystem.RecursiveDirectoryIterator enumerator = IO.filesystem.FSUtil.CopyDirectory(Location, FullPath);
+			RecursiveDirectoryIterator enumerator = FSUtil.CopyDirectory(Location, FullPath);
 			ProcessFile(Name, ref enumerator);
 			return new ProjectInfo(Name, enumerator.OriginalDirectoryInfo, enumerator);
 		}
 
-		private void ProcessFile(string NewName, ref IO.filesystem.RecursiveDirectoryIterator iter)
+		private void ProcessFile(string NewName, ref RecursiveDirectoryIterator iter)
 		{
 			foreach (FileInfo file in iter)
 			{
@@ -31,20 +32,28 @@ namespace DSTEd.Core.ProjectManager
 					try
 					{
 						file.MoveTo(newpath);
-
 					}
-					catch (DirectoryNotFoundException)
+					catch (DirectoryNotFoundException e)
 					{
-						Directory.CreateDirectory(file.DirectoryName);
+						System.Diagnostics.Debug.WriteLine("Direcotry not found?\n" +
+							newpath + '\n' +
+							"HRESULT:\n" +
+							e.HResult);
 						file.MoveTo(newpath);
 					}
 					catch(FileNotFoundException e)
 					{
-						Console.WriteLine("Exception:{0}\n????????BUG???????\nCheck FSUtil,RecursiveDirectoryItertatior", e);
+						Console.WriteLine(
+							"????????BUG???????\n" +
+							"Check FSUtil.RecursiveDirectoryItertatior\n" +
+							"Stack Traceback:\n{1}\n" +
+							"Message:\n{2}\n" +
+							"HRESULT:\n{3}\n", 
+							e.StackTrace,e.Message,e.HResult);
 					}
 					catch(Exception e)
 					{
-						System.Diagnostics.Debug.WriteLine(e);
+						System.Diagnostics.Debug.WriteLine(e.Message + e.StackTrace);
 					}
 				}
 			}

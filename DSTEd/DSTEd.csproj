@@ -584,7 +584,12 @@
   <ItemGroup>
     <Resource Include="Assets\Logo.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\DSTEd.Core.IO.FileSystem\DSTEd.Core.IO.EnumerableFileSystem.csproj">
+      <Project>{e2a39f1e-fb70-4b9e-91ce-0d36155156b8}</Project>
+      <Name>DSTEd.Core.IO.EnumerableFileSystem</Name>
+    </ProjectReference>
+  </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.6.1">
       <Visible>False</Visible>
