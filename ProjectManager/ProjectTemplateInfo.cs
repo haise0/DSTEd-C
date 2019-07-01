@@ -15,9 +15,15 @@ namespace DSTEd.Core.ProjectManager
 		public string Name { get; private set; }
 		public DirectoryInfo Location { get; private set; }
 
+		public ProjectTemplateInfo()
+		{
+			Name = null;
+			Location = null;
+		}
+
 		virtual public ProjectInfo CreateProject(string Name, string FullPath)
 		{
-			RecursiveDirectoryIterator enumerator = FSUtil.CopyDirectory(Location, FullPath);
+			RecursiveDirectoryIterator enumerator = FSUtil.CopyDirectory(Location, new DirectoryInfo(FullPath));
 			ProcessFiles(Name, ref enumerator);
 			return new ProjectInfo(Name, enumerator.OriginalDirectoryInfo, enumerator);
 		}

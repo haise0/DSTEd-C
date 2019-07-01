@@ -8,10 +8,19 @@ namespace DSTEd.Core.IO.EnumerableFileSystem
 	/// <summary>
 	/// Gets all files(also in the subdirectories) in a directory to itertate
 	/// </summary>
-	public class RecursiveDirectoryIterator : IEnumerable<FileInfo>
+	public class RecursiveDirectoryIterator : IEnumerable<FileInfo>, ICollection<FileInfo>, ICollection
 	{
 		List<FileInfo> internal_vector = new List<FileInfo>(50);
 		public DirectoryInfo OriginalDirectoryInfo { get; private set; }
+
+		public int Count => internal_vector.Count;
+
+		public bool IsReadOnly => true;
+
+		public object SyncRoot => ((ICollection)internal_vector).SyncRoot;
+
+		public bool IsSynchronized => ((ICollection)internal_vector).IsSynchronized;
+
 		public RecursiveDirectoryIterator(DirectoryInfo directory)
 		{
 			OriginalDirectoryInfo = directory;
@@ -29,7 +38,8 @@ namespace DSTEd.Core.IO.EnumerableFileSystem
 			System.Threading.Tasks.Parallel.ForEach(dir.EnumerateDirectories(), 
 				(DirectoryInfo file) => RecursiveAdd(file));
 		}
-		IEnumerator<FileInfo> IEnumerable<FileInfo>.GetEnumerator()
+
+		public IEnumerator<FileInfo> GetEnumerator()
 		{
 			return internal_vector.GetEnumerator();
 		}
@@ -38,16 +48,53 @@ namespace DSTEd.Core.IO.EnumerableFileSystem
 		{
 			return internal_vector.GetEnumerator();
 		}
+
+		public void Add(FileInfo item)
+		{
+			((ICollection<FileInfo>)internal_vector).Add(item);
+		}
+
+		public void Clear()
+		{
+			internal_vector.Clear();
+		}
+
+		public bool Contains(FileInfo item)
+		{
+			return internal_vector.Contains(item);
+		}
+
+		public void CopyTo(FileInfo[] array, int arrayIndex)
+		{
+			internal_vector.CopyTo(array, arrayIndex);
+		}
+
+		public bool Remove(FileInfo item)
+		{
+			return internal_vector.Remove(item);
+		}
+
+		public void CopyTo(Array array, int index)
+		{
+			((ICollection)internal_vector).CopyTo(array, index);
+		}
+
+		public FileInfo this[int i] => internal_vector[i];
 	}
 
 	public static class FSUtil
 	{
-		public static RecursiveDirectoryIterator CopyDirectory(DirectoryInfo Source,string Destnation)
+		public static RecursiveDirectoryIterator CopyDirectory(DirectoryInfo Source,DirectoryInfo Destnation)
 		{
-			Destnation = Path.GetFileName(Destnation);
-			foreach (FileInfo file in new RecursiveDirectoryIterator(Source))
+			//Destnation = Path.GetFileName(Destnation);
+			return CopyFilesToDirectory(new RecursiveDirectoryIterator(Source), Destnation);
+		}
+
+		public static RecursiveDirectoryIterator CopyFilesToDirectory(IEnumerable<FileInfo> Files, DirectoryInfo TargetDirectory)
+		{
+			foreach (FileInfo file in Files)
 			{
-				string filedest = Destnation + '\\' + SimpleRelative(Source.FullName, file.FullName);
+				string filedest = TargetDirectory.FullName + '\\' + SimpleRelative(file.DirectoryName, file.FullName);
 				try
 				{
 					Directory.CreateDirectory(Path.GetDirectoryName(filedest));
@@ -76,11 +123,11 @@ namespace DSTEd.Core.IO.EnumerableFileSystem
 				{
 					Console.WriteLine(e.ToString() + e.HResult);
 				}
-				#if DEBUG
-				System.Diagnostics.Debug.WriteLine("Copy {0} to {1}", file.FullName, filedest); 
-				#endif
+#if DEBUG
+				System.Diagnostics.Debug.WriteLine("Copy {0} to {1}", file.FullName, filedest);
+#endif
 			}
-			return new RecursiveDirectoryIterator(Destnation);
+			return new RecursiveDirectoryIterator(TargetDirectory);
 		}
 
 		public static string SimpleRelative(string Current, string Another)

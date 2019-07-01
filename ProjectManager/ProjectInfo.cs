@@ -15,16 +15,23 @@ namespace DSTEd.Core.ProjectManager
 		public string Name { get; private set; }
 		public DirectoryInfo Location { get; private set; }
 
-		public List<FileInfo> IncludedFiles { get; private set; }
+		public IEnumerable<FileInfo> IncludedFiles { get; private set; }
+
+		protected ProjectInfo()
+		{
+			Name = null;
+			Location = null;
+			IncludedFiles = null;
+		}
 
 		public ProjectInfo(string Name, DirectoryInfo Location,IEnumerable<FileInfo> IncludedFileEnumerator)
 		{
 			this.Name = Name;
 			this.Location = Location;
-			IncludedFiles = new List<FileInfo>(IncludedFileEnumerator);
+			IncludedFiles = IncludedFileEnumerator;
 		}
 
-		public void Build(DirectoryInfo OutPutPath = null)
+		public virtual void Build(DirectoryInfo OutPutPath = null)
 		{
 			if (OutPutPath == null)
 			{
@@ -34,7 +41,25 @@ namespace DSTEd.Core.ProjectManager
 
 			foreach (FileInfo fileinfo in IncludedFiles)
 			{
-				File.Copy(fileinfo.FullName, Path.Combine(OutPutPath.FullName, fileinfo.Name), true);
+				try
+				{
+					//IO.EnumerableFileSystem.FSUtil.
+				}
+				catch (Exception e)
+				{
+#if DEBUG
+					System.Diagnostics.Debugger.Break();
+					System.Diagnostics.Debug.WriteLine("msg:{0}\n" +
+						"HRESULT:{1}" +
+						"Stack Traceback:{2}",
+						e.Message, e.HResult, e.StackTrace);
+#else
+					Console.WriteLine("msg:{0}\n" +
+						"HRESULT:{1}" +
+						"Stack Traceback:{2}",
+						e.Message, e.HResult, e.StackTrace);
+#endif
+				}
 			}
 		}
 
