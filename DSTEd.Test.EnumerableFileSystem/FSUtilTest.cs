@@ -33,5 +33,29 @@ namespace DSTEd.Test.IO.EnumerableFileSystem
 				Assert.AreEqual(except_fullpath, actual_fullpath, "\nexcxept:{0}\nActual{1}", except_fullpath, actual_fullpath);
 			}
 		}
+
+		[TestMethod]
+		public void CopyDirectoryTest()
+		{
+			FileInfo[] except =
+			{
+				new FileInfo(@".\FileSystemCopyTest\File1.txt"),
+				new FileInfo(@".\FileSystemCopyTest\File2.txt"),
+				new FileInfo(@".\FileSystemCopyTest\Directory1\File1.txt"),
+				new FileInfo(@".\FileSystemCopyTest\Directory1\File2.txt"),
+				new FileInfo(@".\FileSystemCopyTest\Directory1\.DotFolderTest\File1.txt"),
+				new FileInfo(@".\FileSystemCopyTest\Directory1\.DotFolderTest\File2.txt")
+			};
+			Directory.Delete(@".\FileSystemCopyTest", true);
+			RecursiveDirectoryIterator actual = FSUtil.CopyDirectory(new DirectoryInfo(@".\FileSystemTest\"),
+				new DirectoryInfo(@".\FileSystemCopyTest\"));
+
+			for (int i = 0; i < 6; i++)
+			{
+				string except_fullpath = except[i].FullName;
+				string actual_fullpath = actual[i].FullName;
+				Assert.AreEqual(except_fullpath, actual_fullpath, "\nexcxept:{0}\nActual{1}", except_fullpath, actual_fullpath);
+			}
+		}
 	}
 }
