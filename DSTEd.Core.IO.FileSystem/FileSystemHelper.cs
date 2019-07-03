@@ -90,11 +90,16 @@ namespace DSTEd.Core.IO.EnumerableFileSystem
 			return CopyFilesToDirectory(new RecursiveDirectoryIterator(Source), Destnation);
 		}
 
-		public static RecursiveDirectoryIterator CopyFilesToDirectory(RecursiveDirectoryIterator Files, DirectoryInfo TargetDirectory)
+		public static RecursiveDirectoryIterator CopyFilesToDirectory(RecursiveDirectoryIterator Iterator,DirectoryInfo TargetDirectory)
+		{
+			return CopyFilesToDirectory(Iterator, Iterator.OriginalDirectoryInfo, TargetDirectory);
+		}
+
+		public static RecursiveDirectoryIterator CopyFilesToDirectory(IEnumerable<FileInfo> Files, DirectoryInfo SourceDirectory , DirectoryInfo TargetDirectory)
 		{
 			foreach (FileInfo file in Files)
 			{
-				string filedest = TargetDirectory.FullName + '\\' + SimpleRelative(Files.OriginalDirectoryInfo.FullName, file.FullName);
+				string filedest = TargetDirectory.FullName + '\\' + SimpleRelative(SourceDirectory.FullName, file.FullName);
 				try
 				{
 					Directory.CreateDirectory(Path.GetDirectoryName(filedest));

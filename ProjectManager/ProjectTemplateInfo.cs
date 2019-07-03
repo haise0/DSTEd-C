@@ -12,8 +12,12 @@ namespace DSTEd.Core.ProjectManager
 	[Serializable]
 	public class ProjectTemplateInfo
 	{
+		[JsonRequired]
 		public string Name { get; private set; }
+		[JsonIgnore]
 		public DirectoryInfo Location { get; private set; }
+		[JsonRequired]
+		private List<FileInfo> files = new List<FileInfo>(50);
 
 		public ProjectTemplateInfo()
 		{
@@ -23,9 +27,9 @@ namespace DSTEd.Core.ProjectManager
 
 		virtual public ProjectInfo CreateProject(string Name, string FullPath)
 		{
-			RecursiveDirectoryIterator enumerator = FSUtil.CopyDirectory(Location, new DirectoryInfo(FullPath));
-			ProcessFiles(Name, ref enumerator);
-			return new ProjectInfo(Name, enumerator.OriginalDirectoryInfo, enumerator);
+			RecursiveDirectoryIterator iter = FSUtil.CopyFilesToDirectory(files, Location, new DirectoryInfo(FullPath));
+			ProcessFiles(Name, ref iter);
+			return new ProjectInfo(Name, iter.OriginalDirectoryInfo, iter);
 		}
 
 		private void ProcessFiles(string NewName, ref RecursiveDirectoryIterator iter)
@@ -73,6 +77,8 @@ namespace DSTEd.Core.ProjectManager
 						byte[] buffier = File.ReadAllBytes(newpath);
 						string content = Encoding.UTF8.GetString(buffier);
 						content.Replace("<NAME>", NewName);
+						buffier = Encoding.UTF8.GetBytes(content);
+						file.OpenWrite().Write(buffier, 0, buffier.Length);
 					}
 					catch(FileNotFoundException e)
 					{
