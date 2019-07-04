@@ -23,12 +23,24 @@ namespace DSTEd.Core.ProjectManager
 		public int Count => IncludedFiles.Count;
 		[JsonIgnore]
 		public bool IsReadOnly => ((ICollection<FileInfo>)IncludedFiles).IsReadOnly;
+		[JsonIgnore]
+		private static JsonSerializer serializer = new JsonSerializer();
 
-		public ProjectInfo(string Name, DirectoryInfo Location,IEnumerable<FileInfo> IncludedFileEnumerator)
+		/// <summary>
+		/// Defualt constructor, this should only be used by json deserializer.
+		/// </summary>
+		public ProjectInfo()
+		{
+			Name = null;
+			Location = null;
+			IncludedFiles = null;
+		}
+
+		public ProjectInfo(string Name, DirectoryInfo Location,IEnumerable<FileInfo> IncludedFiles)
 		{
 			this.Name = Name;
 			this.Location = Location;
-			IncludedFiles = new List<FileInfo>(IncludedFileEnumerator);
+			this.IncludedFiles = new List<FileInfo>(IncludedFiles);
 		}
 
 		/// <summary>
@@ -38,10 +50,19 @@ namespace DSTEd.Core.ProjectManager
 		public static ProjectInfo Deserialize(DirectoryInfo Location)
 		{
 			string json_path = Location.FullName + "\\Project.json";
-			JsonSerializer serializer = new JsonSerializer();
 			var ret_value = serializer.Deserialize<ProjectInfo>(new JsonTextReader(new StreamReader(File.OpenRead(json_path))));
 			ret_value.Location = Location;
 			return ret_value;
+		}
+
+		/// <summary>
+		/// Save this ProjectInfo into Project.json
+		/// </summary>
+		public void Save()
+		{
+			string json_path = Location.FullName + "\\Project.json";
+			using (FileStream json = new FileStream(json_path, FileMode.Truncate, FileAccess.Write))
+				serializer.Serialize(new StreamWriter(json), this, typeof(ProjectInfo));
 		}
 
 		public virtual void Build(DirectoryInfo OutPutPath = null)

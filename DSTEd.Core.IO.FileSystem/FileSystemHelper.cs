@@ -139,7 +139,27 @@ namespace DSTEd.Core.IO.EnumerableFileSystem
 		{
 			return Another.Replace(Current, string.Empty);
 			// HACK: 
-			//it's buggy. if any paramitter does not a full path, it will return a wrong result.
+			// Two params must be full path, and Current must be a part of Another!
+		}
+
+		/// <summary>
+		/// Filter out some specified file in a FileInfo collection
+		/// </summary>
+		/// <param name="Files"></param>
+		/// <returns></returns>
+		/// <example>ApplyFilter(files,".jpg",".png",".lua")</example>
+		public static List<FileInfo> ApplyFilter(ICollection<FileInfo> Files,params string[] Extensions)
+		{
+			List<FileInfo> ret_value = new List<FileInfo>(Files.Count);
+			foreach (FileInfo file in Files)
+			{
+				foreach (string ext in Extensions)
+				{
+					if (file.Extension == ext)
+						ret_value.Add(file);
+				}
+			}
+			return ret_value;
 		}
 	}
 }

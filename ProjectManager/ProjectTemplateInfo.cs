@@ -19,6 +19,9 @@ namespace DSTEd.Core.ProjectManager
 		[JsonRequired]
 		private List<FileInfo> files = new List<FileInfo>(50);
 
+		/// <summary>
+		/// Defualt constructor, this should only be used by json deserializer.
+		/// </summary>
 		public ProjectTemplateInfo()
 		{
 			Name = null;
