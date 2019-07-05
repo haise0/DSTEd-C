@@ -8,25 +8,34 @@ namespace DSTEd.Core.IO.EnumerableFileSystem
 	/// <summary>
 	/// Gets all files(also in the subdirectories) in a directory to itertate
 	/// </summary>
-	public class RecursiveDirectoryIterator : IEnumerable<FileInfo>, ICollection<FileInfo>, ICollection
+	public class RecursiveDirectoryIterator : IEnumerable<FileInfo>
 	{
 		List<FileInfo> internal_vector = new List<FileInfo>(50);
+
+		/// <summary>
+		/// 
+		/// </summary>
 		public DirectoryInfo OriginalDirectoryInfo { get; private set; }
 
+		/// <summary>
+		/// Get the number of founeded files
+		/// </summary>
 		public int Count => internal_vector.Count;
-
-		public bool IsReadOnly => true;
-
-		public object SyncRoot => ((ICollection)internal_vector).SyncRoot;
-
-		public bool IsSynchronized => ((ICollection)internal_vector).IsSynchronized;
-
+		
+		/// <summary>
+		/// Initalize iterator by DirectoryInfo object.
+		/// </summary>
+		/// <param name="directory"></param>
 		public RecursiveDirectoryIterator(DirectoryInfo directory)
 		{
 			OriginalDirectoryInfo = directory;
 			RecursiveAdd(directory);
 		}
 
+		/// <summary>
+		/// Initalize iterator by path string.
+		/// </summary>
+		/// <param name="Path"></param>
 		public RecursiveDirectoryIterator(string Path):this(new DirectoryInfo(Path))
 		{
 
@@ -39,6 +48,10 @@ namespace DSTEd.Core.IO.EnumerableFileSystem
 				(DirectoryInfo file) => RecursiveAdd(file));
 		}
 
+		/// <summary>
+		/// Get the enumerator
+		/// </summary>
+		/// <returns></returns>
 		public IEnumerator<FileInfo> GetEnumerator()
 		{
 			return internal_vector.GetEnumerator();
@@ -49,52 +62,63 @@ namespace DSTEd.Core.IO.EnumerableFileSystem
 			return internal_vector.GetEnumerator();
 		}
 
-		public void Add(FileInfo item)
+		/// <summary>
+		/// </summary>
+		/// <param name="file"></param>
+		/// <returns>true for containd, false for not contained</returns>
+		public bool Contains(FileInfo file)
 		{
-			((ICollection<FileInfo>)internal_vector).Add(item);
+			foreach (FileInfo source in internal_vector)
+			{
+				if (source.FullName == file.FullName)
+					return true;
+			}
+			return false;
 		}
 
-		public void Clear()
-		{
-			internal_vector.Clear();
-		}
-
-		public bool Contains(FileInfo item)
-		{
-			return internal_vector.Contains(item);
-		}
-
-		public void CopyTo(FileInfo[] array, int arrayIndex)
-		{
-			internal_vector.CopyTo(array, arrayIndex);
-		}
-
-		public bool Remove(FileInfo item)
-		{
-			return internal_vector.Remove(item);
-		}
-
-		public void CopyTo(Array array, int index)
-		{
-			((ICollection)internal_vector).CopyTo(array, index);
-		}
-
+		/// <summary>
+		/// indexer
+		/// </summary>
+		/// <param name="i"></param>
+		/// <returns></returns>
 		public FileInfo this[int i] => internal_vector[i];
 	}
 
+	/// <summary>
+	/// File system utilities
+	/// </summary>
 	public static class FSUtil
 	{
+		/// <summary>
+		/// Copy a directory into another directory,and keep the original directory structure
+		/// </summary>
+		/// <param name="Source">Source directory</param>
+		/// <param name="Destnation">Destnation directory</param>
+		/// <returns></returns>
 		public static RecursiveDirectoryIterator CopyDirectory(DirectoryInfo Source,DirectoryInfo Destnation)
 		{
 			//Destnation = Path.GetFileName(Destnation);
 			return CopyFilesToDirectory(new RecursiveDirectoryIterator(Source), Destnation);
 		}
 
+		/// <summary>
+		/// Copy all specified files into a new directory
+		/// </summary>
+		/// <param name="Iterator">Source directory</param>
+		/// <param name="TargetDirectory"></param>
+		/// <returns></returns>
 		public static RecursiveDirectoryIterator CopyFilesToDirectory(RecursiveDirectoryIterator Iterator,DirectoryInfo TargetDirectory)
 		{
 			return CopyFilesToDirectory(Iterator, Iterator.OriginalDirectoryInfo, TargetDirectory);
 		}
 
+		/// <summary>
+		/// Copy all specified files into a new directory
+		/// </summary>
+		/// <param name="Files"></param>
+		/// <param name="SourceDirectory"></param>
+		/// <param name="TargetDirectory"></param>
+		/// <returns></returns>
 		public static RecursiveDirectoryIterator CopyFilesToDirectory(IEnumerable<FileInfo> Files, DirectoryInfo SourceDirectory , DirectoryInfo TargetDirectory)
 		{
 			foreach (FileInfo file in Files)
@@ -135,18 +159,23 @@ namespace DSTEd.Core.IO.EnumerableFileSystem
 			return new RecursiveDirectoryIterator(TargetDirectory);
 		}
 
-		public static string SimpleRelative(string Current, string Another)
+		/// <summary>
+		/// Get relative path from two full path strings.
+		/// </summary>
+		/// <param name="Parent">parent directory</param>
+		/// <param name="File">file</param>
+		/// <returns></returns>
+		public static string SimpleRelative(string Parent, string File)
 		{
-			return Another.Replace(Current, string.Empty);
-			// HACK: 
-			// Two params must be full path, and Current must be a part of Another!
+			return File.Replace(Parent, string.Empty);
 		}
 
 		/// <summary>
 		/// Filter out some specified file in a FileInfo collection
 		/// </summary>
 		/// <param name="Files"></param>
-		/// <returns></returns>
+		/// <param name="Extensions">like ".jpg",".lua"</param>
+		/// <returns>A List{FileInfo} contains the filtered out files</returns>
 		/// <example>ApplyFilter(files,".jpg",".png",".lua")</example>
 		public static List<FileInfo> ApplyFilter(ICollection<FileInfo> Files,params string[] Extensions)
 		{

@@ -9,15 +9,32 @@ using Newtonsoft.Json;
 
 namespace DSTEd.Core.ProjectManager
 {
+	/// <summary>
+	/// Repersents a Project template
+	/// </summary>
 	[Serializable]
 	public class ProjectTemplateInfo
 	{
+		/// <summary>
+		/// Project template name
+		/// </summary>
 		[JsonRequired]
 		public string Name { get; private set; }
+
+		/// <summary>
+		/// Project template location
+		/// </summary>
 		[JsonIgnore]
 		public DirectoryInfo Location { get; private set; }
+
 		[JsonRequired]
 		private List<FileInfo> files = new List<FileInfo>(50);
+
+		/// <summary>
+		/// Static JSON serializer
+		/// </summary>
+		[JsonIgnore]
+		protected static JsonSerializer serializer = new JsonSerializer();
 
 		/// <summary>
 		/// Defualt constructor, this should only be used by json deserializer.
@@ -28,11 +45,37 @@ namespace DSTEd.Core.ProjectManager
 			Location = null;
 		}
 
-		virtual public ProjectInfo CreateProject(string Name, string FullPath)
+		/// <summary>
+		/// Automatually deserialize json to create it,
+		/// Use this to get a <c>ProjectTemplateInfo</c> object
+		/// </summary>
+		/// <example>
+		///	<code>
+		///		ProjectTemplateInfo template = ProjectTemplateInfo.Deserialize(new DirectoryInfo("\template1\"))
+		///	</code>
+		/// </example>
+		/// <param name="Location">Where the template locates</param>
+		public static ProjectTemplateInfo Deserialize(DirectoryInfo Location)
 		{
-			RecursiveDirectoryIterator iter = FSUtil.CopyFilesToDirectory(files, Location, new DirectoryInfo(FullPath));
+			string json_path = Location.FullName + "\\ProjectTemplate.json";
+			var ret_value = serializer.Deserialize<ProjectTemplateInfo>(new JsonTextReader(new StreamReader(File.OpenRead(json_path))));
+			ret_value.Location = Location;
+			return ret_value;
+		}
+
+		 /// <summary>
+		 /// Create a project and return a <c>ProjectInfo</c> object repersent it
+		 /// </summary>
+		 /// <param name="Name">Project Name</param>
+		 /// <param name="ProjectLocation">Where the new project locates</param>
+		 /// <returns><c>ProjectInfo</c> represent the created project</returns>
+		virtual public ProjectInfo CreateFormThis(string Name, DirectoryInfo ProjectLocation)
+		{
+			RecursiveDirectoryIterator iter = FSUtil.CopyFilesToDirectory(files, Location, ProjectLocation);
 			ProcessFiles(Name, ref iter);
-			return new ProjectInfo(Name, iter.OriginalDirectoryInfo, iter);
+			var ret_value = new ProjectInfo(Name, iter.OriginalDirectoryInfo, iter);
+			ret_value.Save();
+			return ret_value;
 		}
 
 		private void ProcessFiles(string NewName, ref RecursiveDirectoryIterator iter)

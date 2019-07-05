@@ -10,21 +10,37 @@ using System.Collections;
 
 namespace DSTEd.Core.ProjectManager
 {
+	/// <summary>
+	/// Repersents a project
+	/// </summary>
 	[Serializable]
 	public class ProjectInfo : IEnumerable<FileInfo>
 	{
+		/// <summary>
+		/// Project name
+		/// </summary>
 		[JsonRequired]
 		public string Name { get; private set; }
+		/// <summary>
+		/// Project location
+		/// </summary>
 		[JsonIgnore]
 		public DirectoryInfo Location { get; private set; }
+		/// <summary>
+		/// Files included by the project
+		/// </summary>
 		[JsonRequired]
 		protected List<FileInfo> IncludedFiles;
+		/// <summary>
+		/// File count
+		/// </summary>
 		[JsonIgnore]
 		public int Count => IncludedFiles.Count;
+		/// <summary>
+		/// Static JSON serializer
+		/// </summary>
 		[JsonIgnore]
-		public bool IsReadOnly => ((ICollection<FileInfo>)IncludedFiles).IsReadOnly;
-		[JsonIgnore]
-		private static JsonSerializer serializer = new JsonSerializer();
+		protected static JsonSerializer serializer = new JsonSerializer();
 
 		/// <summary>
 		/// Defualt constructor, this should only be used by json deserializer.
@@ -36,6 +52,12 @@ namespace DSTEd.Core.ProjectManager
 			IncludedFiles = null;
 		}
 
+		/// <summary>
+		/// Initalize ProjectInfo by specified name,location,and included files
+		/// </summary>
+		/// <param name="Name">Project name</param>
+		/// <param name="Location">Project Location</param>
+		/// <param name="IncludedFiles"></param>
 		public ProjectInfo(string Name, DirectoryInfo Location,IEnumerable<FileInfo> IncludedFiles)
 		{
 			this.Name = Name;
@@ -47,6 +69,11 @@ namespace DSTEd.Core.ProjectManager
 		/// Automatually deserialize json to create it
 		/// </summary>
 		/// <param name="Location">Where the Project locates</param>
+		/// <example>
+		/// <code>
+		/// ProjectList.Add(ProjectInfo.Deserialize(project_dir))
+		/// </code>
+		/// </example>
 		public static ProjectInfo Deserialize(DirectoryInfo Location)
 		{
 			string json_path = Location.FullName + "\\Project.json";
@@ -65,6 +92,10 @@ namespace DSTEd.Core.ProjectManager
 				serializer.Serialize(new StreamWriter(json), this, typeof(ProjectInfo));
 		}
 
+		/// <summary>
+		/// build the project
+		/// </summary>
+		/// <param name="OutPutPath">specifies where the output path,"..\test_{Name}" by default</param>
 		public virtual void Build(DirectoryInfo OutPutPath = null)
 		{
 			if (OutPutPath == null)
@@ -105,6 +136,10 @@ namespace DSTEd.Core.ProjectManager
 			//TODO
 		}
 
+		/// <summary>
+		/// Gets the enumerator
+		/// </summary>
+		/// <returns></returns>
 		public IEnumerator<FileInfo> GetEnumerator()
 		{
 			return IncludedFiles.GetEnumerator();
@@ -115,21 +150,55 @@ namespace DSTEd.Core.ProjectManager
 			return IncludedFiles.GetEnumerator();
 		}
 
+		/// <summary>
+		/// Add an existing file into the project
+		/// </summary>
+		/// <param name="File"></param>
 		public void AddFile(FileInfo File)
 		{
+			//param check
+			if (!File.Exists)
+				throw new FileNotFoundException(string.Format("Attempting to add a non-existing file into project \"{0}\"",Name),
+					File.FullName);
+			//check success,add
 			IncludedFiles.Add(File);
 		}
 
+		/// <summary>
+		/// Add some existing file into the project
+		/// </summary>
+		/// <param name="Files"></param>
 		public void AddFiles(IEnumerable<FileInfo> Files)
 		{
+			//param check
+			string not_exist = string.Empty;
+			foreach (FileInfo file in Files)
+				if (!file.Exists)
+					not_exist += file.FullName + '\n';
+
+			//check failed
+			if (not_exist != string.Empty)
+				throw new FileNotFoundException(string.Format("Attempting to add some non-existing file(s) into project \"{0}\"", Name)
+					, not_exist);
+
+			//check success,add
 			IncludedFiles.AddRange(Files);
 		}
 
+		/// <summary>
+		/// Ignore a specified file
+		/// </summary>
+		/// <param name="file"></param>
+		/// <returns></returns>
 		public bool IgnoreFile(FileInfo file)
 		{
 			return IncludedFiles.Remove(file);
 		}
 
+		/// <summary>
+		/// Delete a specified file on the disk
+		/// </summary>
+		/// <param name="file"></param>
 		public void DeleteFile(FileInfo file)
 		{
 			IncludedFiles.Remove(file);
