@@ -34,12 +34,21 @@ namespace DSTEd.Core.ProjectManager
 		/// Static JSON serializer
 		/// </summary>
 		[JsonIgnore]
-		protected static JsonSerializer serializer = new JsonSerializer();
+		protected static JsonSerializer serializer;
+
+		static ProjectTemplateInfo()
+		{
+			serializer = new JsonSerializer();
+			serializer.ConstructorHandling = ConstructorHandling.AllowNonPublicDefaultConstructor;
+			serializer.ObjectCreationHandling = ObjectCreationHandling.Auto;
+			serializer.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+			serializer.Formatting = Formatting.Indented;
+		}
 
 		/// <summary>
 		/// Defualt constructor, this should only be used by json deserializer.
 		/// </summary>
-		public ProjectTemplateInfo()
+		protected ProjectTemplateInfo()
 		{
 			Name = null;
 			Location = null;
