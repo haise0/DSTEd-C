@@ -143,9 +143,9 @@ namespace DSTEd.Core.IO.EnumerableFileSystem
 					Console.WriteLine(
 						"????????BUG???????\n" +
 						"Check FSUtil.RecursiveDirectoryItertatior\n" +
-						"Stack Traceback:\n{1}\n" +
-						"Message:\n{2}\n" +
-						"HRESULT:\n{3}\n",
+						"Stack Traceback:\n{0}\n" +
+						"Message:\n{1}\n" +
+						"HRESULT:\n{2}\n",
 						e.StackTrace, e.Message, e.HResult);
 				}
 				catch (Exception e)
@@ -160,14 +160,70 @@ namespace DSTEd.Core.IO.EnumerableFileSystem
 		}
 
 		/// <summary>
-		/// Get relative path from two full path strings.
+		/// Get relative path from two full path strings. faster than Relative
 		/// </summary>
 		/// <param name="Parent">parent directory</param>
-		/// <param name="File">file</param>
-		/// <returns></returns>
+		/// <param name="File">file path</param>
+		/// <returns>Relative path string</returns>
 		public static string SimpleRelative(string Parent, string File)
 		{
 			return File.Replace(Parent, string.Empty);
+		}
+
+		/// <summary>
+		/// Strict relative path
+		/// </summary>
+		/// <param name="basepath"></param>
+		/// <param name="path"></param>
+		/// <returns></returns>
+		public static string Relative(string basepath, string path)
+		{
+			string[] b = basepath.Replace('/', '\\').Split('\\');
+			string[] p = path.Replace('/', '\\').Split('\\');
+			string relative_path;
+
+			IEnumerator<string>
+			it_base = ((IEnumerable<string>)b).GetEnumerator(),
+			it_path = ((IEnumerable<string>)p).GetEnumerator();
+			{
+				bool b_end = true, p_end = true;
+				int diff = 0;
+
+				//find same part by "foreach"
+				do
+				{
+					b_end = it_base.MoveNext();
+					p_end = it_path.MoveNext();
+					
+					if (it_base.Current == it_path.Current && (it_base.Current != string.Empty))
+						break;
+
+					diff++;
+				} while (b_end && p_end);
+
+				//no difference until one collection end
+				if(!b_end)
+				{
+					relative_path = ".\\" + it_path.Current;
+					while (it_path.MoveNext())
+					{
+						relative_path += '\\' + it_path.Current;
+					}
+					return relative_path;
+				}
+
+				if(!p_end)
+				{
+					relative_path = ".\\" + it_base.Current;
+					while (it_base.MoveNext())
+					{
+						relative_path += '\\' + it_base.Current;
+					}
+					return relative_path;
+				}
+			}
+			return string.Empty;
+
 		}
 
 		/// <summary>

@@ -1,9 +1,6 @@
-﻿using System;
+﻿using DSTEd.Core.IO.EnumerableFileSystem;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using DSTEd.Core.IO.EnumerableFileSystem;
 using System.Diagnostics;
-using System.Collections.Generic;
-using System.Collections;
 using System.IO;
 
 namespace DSTEd.Test.IO.EnumerableFileSystem
@@ -56,6 +53,19 @@ namespace DSTEd.Test.IO.EnumerableFileSystem
 				string actual_fullpath = actual[i].FullName;
 				Assert.AreEqual(except_fullpath, actual_fullpath, "\nexcxept:{0}\nActual{1}", except_fullpath, actual_fullpath);
 			}
+		}
+
+		[TestMethod]
+		public void RelativeTest()
+		{
+			string _base = "\\dir\\base";
+			string path1 = "\\dir\\base\\file";
+			string path2 = "\\dir\\file";
+			string path3 = "\\file";
+			Assert.AreEqual("\\file", FSUtil.Relative(_base, path1));
+			Assert.AreEqual("..", FSUtil.Relative(path1, _base));
+			//Assert.AreEqual(FSUtil.Relative(_base, path2), "..\\file");
+			//Assert.AreEqual(FSUtil.Relative(_base, path3), "..\\..\\file");
 		}
 	}
 }
