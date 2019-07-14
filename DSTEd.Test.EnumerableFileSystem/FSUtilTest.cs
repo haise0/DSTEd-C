@@ -69,12 +69,13 @@ namespace DSTEd.Test.IO.EnumerableFileSystem
 			Assert.AreEqual("\\file", FSUtil.Relative(_base, path1),"base->path1");
 			Assert.AreEqual("\\sub\\directory\\file", FSUtil.Relative(_base, path4), "base->path4");
 
-			//
+			//a little rare?
 			Assert.AreEqual("\\..", FSUtil.Relative(path1, _base),"path1->base");
 			Assert.AreEqual("\\..\\..\\..", FSUtil.Relative(path4, _base), "path4->base");
 
-			//Assert.AreEqual(FSUtil.Relative(_base, path2), "..\\file","base->path2");
-			//Assert.AreEqual(FSUtil.Relative(_base, path3), "..\\..\\file","base->path3");
+			//more rare
+			Assert.AreEqual("..\\file", FSUtil.Relative(_base, path2), "base->path2");
+			Assert.AreEqual("..\\..\\file", FSUtil.Relative(_base, path3), "base->path3");
 		}
 	}
 }

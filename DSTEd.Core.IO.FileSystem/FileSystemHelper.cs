@@ -175,8 +175,8 @@ namespace DSTEd.Core.IO.EnumerableFileSystem
 		/// </summary>
 		/// <param name="basepath"></param>
 		/// <param name="path"></param>
-		/// <returns></returns>
-		//祖传代码
+		/// <returns>return <c>string.Empty</c> when two path can't be relative</returns>
+		//this is 祖传代码
 		public static string Relative(string basepath, string path)
 		{
 			string[] b = basepath.Replace('/', '\\').Split('\\');
@@ -188,7 +188,6 @@ namespace DSTEd.Core.IO.EnumerableFileSystem
 			it_path = ((IEnumerable<string>)p).GetEnumerator();
 			{
 				bool b_end = true, p_end = true;
-				int diff = 0;
 
 				//find same part by "foreach"
 				do
@@ -216,11 +215,36 @@ namespace DSTEd.Core.IO.EnumerableFileSystem
 						return relative_path;
 					}
 
-					if (it_base.Current != it_path.Current && (it_base.Current != string.Empty)) break;
+					//find difference before ends
+					if (it_base.Current != it_path.Current)
+					{
+						string rel_base = "..\\";
+						string rel_path = it_path.Current;
 
-					diff++;
+						Action[] build_relative =
+						{
+							()=>
+							{
+								while (it_base.MoveNext())
+								{
+									rel_base += "..\\";
+								}
+							},//base
+							()=>
+							{
+								while (it_path.MoveNext())
+								{
+									rel_path += '\\' + it_path.Current;
+								}
+							}//path
+						};
+						System.Threading.Tasks.Parallel.Invoke(build_relative);
+
+						return rel_base + rel_path;
+					}
 				} while (b_end && p_end);
 			}
+			//can't be relative
 			return string.Empty;
 		}
 

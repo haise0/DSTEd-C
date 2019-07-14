@@ -1,0 +1,1 @@
+<Playlist Version="1.0"><Add Test="DSTEd.Test.IO.EnumerableFileSystem.FSUtilTest.GetFileList" /><Add Test="DSTEd.Test.IO.EnumerableFileSystem.FSUtilTest.RelativeTest" /><Add Test="DSTEd.Test.IO.EnumerableFileSystem.FSUtilTest.CopyDirectoryTest" /></Playlist>
