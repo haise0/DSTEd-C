@@ -62,10 +62,19 @@ namespace DSTEd.Test.IO.EnumerableFileSystem
 			string path1 = "\\dir\\base\\file";
 			string path2 = "\\dir\\file";
 			string path3 = "\\file";
-			Assert.AreEqual("\\file", FSUtil.Relative(_base, path1));
-			Assert.AreEqual("..", FSUtil.Relative(path1, _base));
-			//Assert.AreEqual(FSUtil.Relative(_base, path2), "..\\file");
-			//Assert.AreEqual(FSUtil.Relative(_base, path3), "..\\..\\file");
+
+			string path4 = "\\dir\\base\\sub\\directory\\file";
+
+			//common relative
+			Assert.AreEqual("\\file", FSUtil.Relative(_base, path1),"base->path1");
+			Assert.AreEqual("\\sub\\directory\\file", FSUtil.Relative(_base, path4), "base->path4");
+
+			//
+			Assert.AreEqual("\\..", FSUtil.Relative(path1, _base),"path1->base");
+			Assert.AreEqual("\\..\\..\\..", FSUtil.Relative(path4, _base), "path4->base");
+
+			//Assert.AreEqual(FSUtil.Relative(_base, path2), "..\\file","base->path2");
+			//Assert.AreEqual(FSUtil.Relative(_base, path3), "..\\..\\file","base->path3");
 		}
 	}
 }
