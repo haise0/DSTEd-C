@@ -63,8 +63,12 @@ namespace DSTEd.Core.ProjectManager
 	public class ProjectManager
 	{
 		private List<ProjectInfo> Projects;
-		private DirectoryInfo ProjectsLocation;
 		private List<ProjectTemplateInfo> Templates = new List<ProjectTemplateInfo>(10);
+
+		/// <summary>
+		/// Get the project directory info.
+		/// </summary>
+		public static DirectoryInfo ProjectsLocation { get; private set; }
 
 		/// <summary>
 		/// Initalizes a new instance of ProjectManger class by a specified directory which palced projects in
@@ -72,7 +76,9 @@ namespace DSTEd.Core.ProjectManager
 		/// <param name="directory">The directory which placed projects in</param>
 		public ProjectManager(string directory)
 		{
-			ProjectsLocation = new DirectoryInfo(directory);
+			if(ProjectsLocation != null)
+				ProjectsLocation = new DirectoryInfo(directory);
+
 			Projects = new List<ProjectInfo>(20);
 			Templates = new List<ProjectTemplateInfo>(10);
 

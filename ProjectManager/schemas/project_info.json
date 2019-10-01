@@ -1,0 +1,44 @@
+﻿{
+	"$schema": "http://json-schema.org/draft-04/schema",
+	"$id": "https://www.dsted.org/project_info.json",
+	"title": "dsted-c projinfo",
+	"description": "DSTEd-C project info schema",
+	"type": "object",
+	"properties":
+	{
+		"name":
+		{
+			"type": "string",
+			"description": "Project Name"
+		},
+		"includedFiles":
+		{
+			"type": "array",
+			"items":
+			{
+				"type": "object",
+				"properties":
+				{
+					"typeId":
+					{
+						"type": "integer",
+						"description": "File type ID,will be used in build step",
+
+					},
+					"typeName":
+					{
+						"type": "integer",
+						"description": "human friendly name,not necessary"
+					},
+					"relativePath":
+					{
+						"type": "string"
+					}
+				},
+				"required": ["relativePath","typeId"]
+			},
+			"minItems": 0
+		}
+	},
+	"required": ["name","includedFiles"]
+}

@@ -1,0 +1,7 @@
+{
+	"name": "<NAME>",
+	"includedFiles":
+	[
+		{"relativePath": "./src/modinfo.lua","typeId": 0}
+	]
+}

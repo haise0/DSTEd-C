@@ -35,9 +35,6 @@
     <LangVersion>7.3</LangVersion>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -48,13 +45,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Builders.cs" />
+    <Compile Include="FileTypes\CodeFile.cs" />
+    <Compile Include="FileTypes\ImageFile.cs" />
     <Compile Include="ProjectInfo.cs" />
     <Compile Include="ProjectManager.cs" />
     <Compile Include="ProjectTemplateInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Interfaces.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
+    <None Include="schemas\project_info.json" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DSTEd.Core.IO.FileSystem\DSTEd.Core.IO.EnumerableFileSystem.csproj">
@@ -62,9 +63,22 @@
       <Name>DSTEd.Core.IO.EnumerableFileSystem</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Json.Schema">
+      <Version>1.1.1</Version>
+    </PackageReference>
+    <PackageReference Include="Newtonsoft.Json">
+      <Version>12.0.2</Version>
+    </PackageReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>:: copy default projects
 xcopy "$(ProjectDir)Project Templates\*" "$(SolutionDir)bin\DSTEd\$(PlatformName)\$(ConfigurationName)\Project Templates\" /E /F /Y</PostBuildEvent>
   </PropertyGroup>
+  <ProjectExtensions>
+    <VisualStudio>
+      <UserProperties schemas_4project_3info_1json__JsonSchema="" />
+    </VisualStudio>
+  </ProjectExtensions>
 </Project>

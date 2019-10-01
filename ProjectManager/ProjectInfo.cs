@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Collections;
+using System.Runtime.Serialization;
 
 namespace DSTEd.Core.ProjectManager
 {
@@ -14,32 +15,31 @@ namespace DSTEd.Core.ProjectManager
 	/// Repersents a project
 	/// </summary>
 	[Serializable]
-	public class ProjectInfo : IEnumerable<FileInfo>
+	public class ProjectInfo : IEnumerable<IDSTModFile>,ISerializable
 	{
 		/// <summary>
 		/// Project name
 		/// </summary>
-		[JsonRequired]
 		public string Name { get; private set; }
+
 		/// <summary>
 		/// Project location
 		/// </summary>
-		[JsonIgnore]
 		public DirectoryInfo Location { get; private set; }
+
 		/// <summary>
-		/// Files included by the project
+		/// Code files included by the project
 		/// </summary>
-		[JsonRequired]
-		protected List<FileInfo> IncludedFiles;
+		protected List<IDSTModFile> IncludedFiles;
+
 		/// <summary>
 		/// File count
 		/// </summary>
-		[JsonIgnore]
 		public int Count => IncludedFiles.Count;
+
 		/// <summary>
 		/// Static JSON serializer
 		/// </summary>
-		[JsonIgnore]
 		protected static JsonSerializer serializer = new JsonSerializer();
 
 		/// <summary>
@@ -62,7 +62,12 @@ namespace DSTEd.Core.ProjectManager
 		{
 			this.Name = Name;
 			this.Location = Location;
-			this.IncludedFiles = new List<FileInfo>(IncludedFiles);
+			this.IncludedFiles = new List<IDSTModFile>();
+
+			foreach (FileInfo item in IncludedFiles)
+			{
+
+			}
 		}
 
 		/// <summary>
@@ -104,43 +109,18 @@ namespace DSTEd.Core.ProjectManager
 				OutPutPath = new DirectoryInfo(targetPath);
 			}
 
-			//Step 1:Copy
-			foreach (FileInfo fileinfo in IncludedFiles)
+			//Run their build command
+			foreach(IDSTModFile file in IncludedFiles)
 			{
-				try
-				{
-
-					IO.EnumerableFileSystem.FSUtil.CopyFilesToDirectory(IncludedFiles, Location, OutPutPath);
-				}
-				catch (Exception e)
-				{
-#if DEBUG
-					System.Diagnostics.Debugger.Break();
-					System.Diagnostics.Debug.WriteLine("msg:{0}\n" +
-						"HRESULT:{1}" +
-						"Stack Traceback:{2}",
-						e.Message, e.HResult, e.StackTrace);
-#else
-					Console.WriteLine("msg:{0}\n" +
-						"HRESULT:{1}" +
-						"Stack Traceback:{2}",
-						e.Message, e.HResult, e.StackTrace);
-#endif
-				}
+				file.Build(OutPutPath);
 			}
-
-			//Step 2:Run autocompiler
-			//TODO
-
-			//Step 3:Delete unused files
-			//TODO
 		}
 
 		/// <summary>
 		/// Gets the enumerator
 		/// </summary>
 		/// <returns></returns>
-		public IEnumerator<FileInfo> GetEnumerator()
+		public IEnumerator<IDSTModFile> GetEnumerator()
 		{
 			return IncludedFiles.GetEnumerator();
 		}
@@ -154,13 +134,8 @@ namespace DSTEd.Core.ProjectManager
 		/// Add an existing file into the project
 		/// </summary>
 		/// <param name="File"></param>
-		public void AddFile(FileInfo File)
+		public void AddFile(IDSTModFile File)
 		{
-			//param check
-			if (!File.Exists)
-				throw new FileNotFoundException(string.Format("Attempting to add a non-existing file into project \"{0}\"",Name),
-					File.FullName);
-			//check success,add
 			IncludedFiles.Add(File);
 		}
 
@@ -168,20 +143,8 @@ namespace DSTEd.Core.ProjectManager
 		/// Add some existing file into the project
 		/// </summary>
 		/// <param name="Files"></param>
-		public void AddFiles(IEnumerable<FileInfo> Files)
+		public void AddFiles(IEnumerable<IDSTModFile> Files)
 		{
-			//param check
-			string not_exist = string.Empty;
-			foreach (FileInfo file in Files)
-				if (!file.Exists)
-					not_exist += file.FullName + '\n';
-
-			//check failed
-			if (not_exist != string.Empty)
-				throw new FileNotFoundException(string.Format("Attempting to add some non-existing file(s) into project \"{0}\"", Name)
-					, not_exist);
-
-			//check success,add
 			IncludedFiles.AddRange(Files);
 		}
 
@@ -190,7 +153,7 @@ namespace DSTEd.Core.ProjectManager
 		/// </summary>
 		/// <param name="file"></param>
 		/// <returns></returns>
-		public bool IgnoreFile(FileInfo file)
+		public bool IgnoreFile(IDSTModFile file)
 		{
 			return IncludedFiles.Remove(file);
 		}
@@ -199,10 +162,17 @@ namespace DSTEd.Core.ProjectManager
 		/// Delete a specified file on the disk
 		/// </summary>
 		/// <param name="file"></param>
-		public void DeleteFile(FileInfo file)
+		public void DeleteFile(IDSTModFile file)
 		{
 			IncludedFiles.Remove(file);
-			File.Delete(file.FullName);
+			File.Delete(file.Path.FullName);
+		}
+
+		/// <summary>Serializer uses this</summary>
+		public void GetObjectData(SerializationInfo info, StreamingContext context)
+		{
+
+			throw new NotImplementedException();
 		}
 	}
 }

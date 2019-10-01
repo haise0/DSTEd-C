@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 
 namespace DSTEd.Core.IO.EnumerableFileSystem
 {
@@ -175,13 +176,19 @@ namespace DSTEd.Core.IO.EnumerableFileSystem
 		/// </summary>
 		/// <param name="basepath"></param>
 		/// <param name="path"></param>
-		/// <returns>return <c>string.Empty</c> when two path can't be relative</returns>
-		//this is 祖传代码
+		/// <returns>Relative path</returns>
+		/// <exception cref="ArgumentException">base path's driver doesn't same as path's</exception>
+		/// <exception cref="Exception">some critical bug happened</exception>
+		//this method is something called 祖传代码
 		public static string Relative(string basepath, string path)
 		{
 			string[] b = basepath.Replace('/', '\\').Split('\\');
 			string[] p = path.Replace('/', '\\').Split('\\');
 			string relative_path;
+
+			//check driver same,e.g. "C:" and "D:" does not same,so they can't be relative
+			if (b[0][1] == ':' && (b[0] != p[0]))
+				throw new ArgumentException(string.Format("base path's driver \"{0}\" doesn't same as path's\"{1}\"", b[0], p[0]));
 
 			IEnumerator<string>
 			it_base = ((IEnumerable<string>)b).GetEnumerator(),
@@ -218,8 +225,8 @@ namespace DSTEd.Core.IO.EnumerableFileSystem
 					//find difference before ends
 					if (it_base.Current != it_path.Current)
 					{
-						string rel_base = "..\\";
-						string rel_path = it_path.Current;
+						StringBuilder rel_base = new StringBuilder("..\\");
+						StringBuilder rel_path = new StringBuilder(it_path.Current);
 
 						Action[] build_relative =
 						{
@@ -227,25 +234,26 @@ namespace DSTEd.Core.IO.EnumerableFileSystem
 							{
 								while (it_base.MoveNext())
 								{
-									rel_base += "..\\";
+									rel_base.Append("..\\");
 								}
 							},//base
 							()=>
 							{
 								while (it_path.MoveNext())
 								{
-									rel_path += '\\' + it_path.Current;
+									rel_path.Append('\\').Append(it_path.Current);
 								}
 							}//path
 						};
 						System.Threading.Tasks.Parallel.Invoke(build_relative);
-
-						return rel_base + rel_path;
+						
+						return rel_base.Append(rel_path).ToString();
 					}
 				} while (b_end && p_end);
 			}
-			//can't be relative
-			return string.Empty;
+
+			throw new Exception(string.Format("Critical error happened, base:{0}," +
+				"path:{1}",basepath,path));
 		}
 
 		/// <summary>
