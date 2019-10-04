@@ -26,7 +26,7 @@ namespace DSTEd.UI {
 
         public void Init()//INIT not runs in main thread now.
 		{
-            string path = Boot.Core().GetSteam().GetGame().GetPath();
+            string path = Boot.Core.Steam.GetGame().GetPath();
 			Dispatcher.BeginInvoke(DispatcherPriority.Normal, new Action( ()=>
 			{
 				this.workspace_mods.Content = new WorkspaceTree(new FileSystem(path + "\\" + "mods"), delegate (FileNode file)
@@ -78,7 +78,7 @@ namespace DSTEd.UI {
 						break;
 					case Dialog.Result.Yes:
 						SaveActiveDocument();
-						//Boot.Core().GetWorkspace().RemoveDocument(GetActiveDocument());
+						//Boot.Core.Workspace.RemoveDocument(GetActiveDocument());
 						break;
 					default:
 						e.Cancel = true;
@@ -208,7 +208,7 @@ namespace DSTEd.UI {
                             AvalonDocument doc = (AvalonDocument) entry;
 
                             if (doc.GetDocument() == document) {
-                                //Boot.Core().GetWorkspace().RemoveDocument( ? doc.GetDocument() : null);
+                                //Boot.Core.Workspace.RemoveDocument( ? doc.GetDocument() : null);
                                 this.editors.Children.Remove(doc);
                                 Menu.Update();
 								//state = Document.State.CREATED;
