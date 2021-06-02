@@ -1,5 +1,5 @@
-# DSTEd (v2)
-C# reimplementation of DSTEd
+# DSTEd (v2.2)
+A C# reimplementation of DSTEd. 
 
 ### Contributing
 If you wan't to contribute on DSTEd, feel free to fork the source.
