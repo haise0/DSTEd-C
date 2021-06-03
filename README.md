@@ -38,4 +38,4 @@ todo:
 * create icon
 * register new steam app ID because i don't think i'm allowed to use the other guy's
 * the other stuff, i'm tired
-* ``
+```
