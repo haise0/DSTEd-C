@@ -16,7 +16,7 @@ If you want to contribute please do so, because I am a bit new to C#. Intuition 
 
 Please see the original project's [Discord Server](https://discord.gg/7MgGxkB) here.
 
-For the development process I'm using Jetbrains Rider 2021.1.3. The original project was created using Visual Studio 2017 CE. You can download that from [here](https://visualstudio.microsoft.com/de/downloads/) for free. Newer VSCode versions will probably work fine but I can't exactly guarantee that.
+For the development process I'm using Jetbrains Rider 2021.1.3. The original project was created using Visual Studio 2017 CE. You can download that from [here](https://visualstudio.microsoft.com/en/downloads/) for free. Newer VSCode versions will probably work fine but I can't exactly guarantee that.
 
 You can also support me by [buying me a coffee](https://www.buymeacoffee.com/haise0). I don't have income at the moment so every drop of caffeine helps!
 
