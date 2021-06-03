@@ -36,8 +36,8 @@
             <TextBlock x:Name="ModPath" AllowDrop="True" Grid.Column="2" Grid.Row="0" 
              HorizontalAlignment="Left" Height="34.022" Margin="0.995,0,0,0" VerticalAlignment="Top" Width="758.411" FontSize="20" Foreground="White" Background="#FF252526" Grid.RowSpan="2"/>
         </Grid>
-        <Button x:Name="OK_BTN" Content="{core:I18N_XAML 'OK'}" Grid.Column="2" HorizontalAlignment="Left" Height="34.926" Grid.Row="3" VerticalAlignment="Top" Width="120.064" Foreground="White" Background="#FF37373A" FontSize="20" Margin="0,45.001,0,0" Grid.RowSpan="2"/>
-        <Button x:Name="CANCEL_BTN" Content="{core:I18N_XAML 'Cancel'}" Grid.Column="3" HorizontalAlignment="Left" Height="34.926" VerticalAlignment="Top" Width="120.064" Foreground="White" Background="#FF37373A" FontSize="20" Margin="0,45.001,0,0" Grid.Row="3" Grid.RowSpan="2"/>
+        <Button x:Name="OkBtn" Content="{core:I18N_XAML 'OK'}" Grid.Column="2" HorizontalAlignment="Left" Height="34.926" Grid.Row="3" VerticalAlignment="Top" Width="120.064" Foreground="White" Background="#FF37373A" FontSize="20" Margin="0,45.001,0,0" Grid.RowSpan="2"/>
+        <Button x:Name="CancelBtn" Content="{core:I18N_XAML 'Cancel'}" Grid.Column="3" HorizontalAlignment="Left" Height="34.926" VerticalAlignment="Top" Width="120.064" Foreground="White" Background="#FF37373A" FontSize="20" Margin="0,45.001,0,0" Grid.Row="3" Grid.RowSpan="2"/>
         <DataGrid x:Name="TemplateGrid" Grid.ColumnSpan="3" Grid.Column="1" HorizontalAlignment="Left" Height="478.212" Grid.Row="1" VerticalAlignment="Top" Width="887.475"/>
     </Grid>
 </Window>

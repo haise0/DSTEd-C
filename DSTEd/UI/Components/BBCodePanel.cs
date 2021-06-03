@@ -32,7 +32,7 @@ namespace DSTEd.UI.Components {
                     image.Height = Double.NaN;
                     BitmapImage bitmap = new BitmapImage();
                     bitmap.BeginInit();
-                    bitmap.UriSource = new Uri(node.GetValue(), UriKind.Absolute);
+                    bitmap.UriSource = new Uri(node.GetValue(), UriKind.Absolute); // todo: <haise> begins traceback that is crashing the app on boot
                     bitmap.EndInit();
                     image.Source = bitmap;
                     container.Children.Add(image);

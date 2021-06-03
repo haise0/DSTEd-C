@@ -49,7 +49,7 @@
                     <RowDefinition />
                 </Grid.RowDefinitions>
                 <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Foreground="#FFFFFF" FontSize="12" Text="This software is licensed under OpenSource." />
-                <TextBlock Grid.Row="1" Grid.Column="0" Foreground="#FFFFFF" FontSize="12" Text="© 2017 Adrian Preuß & 2021 Haise0 | All Rights Reserved" />
+                <TextBlock Grid.Row="1" Grid.Column="0" Foreground="#FFFFFF" FontSize="12" Text="© 2017 Adrian Preuß and 2021 Haise0 | All Rights Reserved" />
             </Grid>
         </Grid>
         <Border Grid.Row="0" Grid.Column="1" Height="1" BorderThickness="0,0,0,1" Margin="0,117,0,-25" BorderBrush="#ED5C2D" />
