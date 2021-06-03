@@ -4,6 +4,8 @@ Reviving DSTEd-C, an editor for existing Don't Starve Together mods.
 
 [![GitHub license](https://img.shields.io/github/license/haise0/Klein-DST?color=teal&style=for-the-badge)](https://github.com/haise0/Klein-DST/blob/NewProject/LICENSE)
 
+### NOTE: PNG files crash the app, but it runs now!
+
 ## The Gist of Things
 I revived this project because I wanted a GUI editor for DST mods. The official tools from Steam and Klei are okay, but I wanted something more integrated within itself for editing. Mod creation will likely still require the official Steam DST mod tools (Steam > Library > Tools > Don't Starve Mod Tools) but as far as editing goes, I just disliked having to toss everything back and forth. 
 
