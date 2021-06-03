@@ -57,14 +57,13 @@
                             Grid.Column="2" 
                             Focusable="True"
                             IsChecked="{Binding Path=IsDropDownOpen,Mode=TwoWay,RelativeSource={RelativeSource TemplatedParent}}"
-                            ClickMode="Press">
-                        </ToggleButton>
+                            ClickMode="Press" />
                         <ContentPresenter Name="ContentSite" IsHitTestVisible="False"  Content="{TemplateBinding SelectionBoxItem}"
-                            ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
-                            ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}"
-                            Margin="0,0,0,0"
-                            VerticalAlignment="Center"
-                            HorizontalAlignment="Left" />
+                                          ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
+                                          ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}"
+                                          Margin="0,0,0,0"
+                                          VerticalAlignment="Center"
+                                          HorizontalAlignment="Left" />
                         <TextBox x:Name="PART_EditableTextBox"
                             Style="{x:Null}" 
                             Template="{StaticResource ComboBoxTextBox}" 

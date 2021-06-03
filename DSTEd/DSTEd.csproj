@@ -674,6 +674,7 @@
     <Resource Include="Assets\FileSystem\Assets.png" />
     <Resource Include="Assets\Icons\ModOptions.png" />
     <Resource Include="Assets\Icons\Clear.png" />
+    <Content Include="Languages\2.0.0.json" />
     <Content Include="Librarys\MoonSharp.Interpreter.dll" />
     <Content Include="Librarys\NativeSquish_x64.dll" />
     <Content Include="Librarys\NativeSquish_x86.dll" />

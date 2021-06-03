@@ -3,8 +3,6 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:Component="clr-namespace:DSTEd.UI.Components"
-        xmlns:Core="clr-namespace:DSTEd.Core"
         mc:Ignorable="d"
         Title="Dialog" Icon="/DSTEd;component/Assets/Logo.ico" MinHeight="300" Width="520" Background="#FF303030" BorderBrush="#FFF15F1B" Foreground="White" ScrollViewer.VerticalScrollBarVisibility="Disabled" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" VerticalContentAlignment="Stretch" SizeToContent="Height">
     <Window.Resources>
@@ -51,10 +49,10 @@
                     <RowDefinition />
                 </Grid.RowDefinitions>
                 <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Foreground="#FFFFFF" FontSize="12" Text="This software is licensed under OpenSource." />
-                <TextBlock Grid.Row="1" Grid.Column="0" Foreground="#FFFFFF" FontSize="12" Text="© 2017 Adrian Preuß | All Rights Reserved" />
+                <TextBlock Grid.Row="1" Grid.Column="0" Foreground="#FFFFFF" FontSize="12" Text="© 2017 Adrian Preuß & 2021 Haise0 | All Rights Reserved" />
             </Grid>
         </Grid>
-        <Border Grid.Row="0" Grid.Column="1" Height="1" BorderThickness="0,0,0,1" Margin="0,117,0,-25" BorderBrush="#ED5C2D"></Border>
+        <Border Grid.Row="0" Grid.Column="1" Height="1" BorderThickness="0,0,0,1" Margin="0,117,0,-25" BorderBrush="#ED5C2D" />
         <TabControl Grid.Row="1" Grid.Column="1" Margin="0,0,0,0" BorderThickness="0,0,0,0" Foreground="#FFFFFF">
             <TabItem Header="System Informations" FontSize="14" Foreground="#FFFFFF">
                 <ScrollViewer Margin="10,10,10,10" MaxHeight="200"  Background="#66000000" Padding="10">

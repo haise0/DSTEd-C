@@ -2,7 +2,7 @@
 using DSTEd.Core;
 
 namespace DSTEd {
-    class Boot {
+	static class Boot {
 		[STAThread]
         public static void Main(String[] args) {
             Logger.Info("Booting up...");
