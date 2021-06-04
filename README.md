@@ -2,7 +2,7 @@
 # Klein
 Reviving DSTEd-C, an editor for existing Don't Starve Together mods.
 
-[![GitHub license](https://img.shields.io/github/license/haise0/Klein-DST?color=teal&style=for-the-badge)](https://github.com/haise0/Klein-DST/blob/NewProject/LICENSE)
+[![GitHub license](https://img.shields.io/github/license/haise0/Klein-DST?color=teal&style=for-the-badge)](https://github.com/haise0/Klein-DST/blob/master/LICENSE)
 
 ### NOTE: PNG files crash the app, but it runs now!
 
